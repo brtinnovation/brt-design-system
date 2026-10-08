@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.*
+
+# Build outputs
+dist/
+build/
+storybook-static/
+*.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Next.js (apps/*)
+.next/
+out/
+next-env.d.ts
+
+# Testing
+coverage/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*storybook.log
+
+# Package manager — ใช้ pnpm เท่านั้น
+package-lock.json
+yarn.lock
+
+# OS
+.DS_Store
+._*
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Vercel
+.vercel
+
+# AI agent local state (ไฟล์ที่ commit ได้คือ AGENTS.md / CLAUDE.md / .ai/)
+.claude/settings.local.json
+.claude/worktrees/
