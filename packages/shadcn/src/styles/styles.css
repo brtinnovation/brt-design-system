@@ -1,0 +1,25 @@
+/*
+ * @brt/shadcn/styles.css — โปรเจกต์ import ไฟล์นี้ต่อจาก tailwindcss:
+ *   @import 'tailwindcss';
+ *   @import '@brt/shadcn/styles.css';
+ */
+@import '@brt/tailwind/theme.css';
+
+/* ให้ Tailwind ของโปรเจกต์ scan class ที่ใช้ใน component (ไฟล์นี้ถูก copy ไปอยู่ใน dist/ ตอน build) */
+@source './';
+
+/*
+ * ชื่อสีหลัก (primary, background, foreground, muted, border ...) มาจาก @brt/tailwind แล้ว
+ * ที่นี่ map เฉพาะชื่อเพิ่มเติมที่ shadcn/ui ใช้ ไปหา token เดิม — ห้ามใส่ค่าสีใหม่
+ */
+@theme inline {
+  --color-card: var(--brt-color-bg-surface);
+  --color-card-foreground: var(--brt-color-text-base);
+  --color-popover: var(--brt-color-bg-base);
+  --color-popover-foreground: var(--brt-color-text-base);
+  --color-accent: var(--brt-color-bg-muted);
+  --color-accent-foreground: var(--brt-color-text-base);
+  --color-destructive: var(--brt-color-error);
+  --color-input: var(--brt-color-border-default);
+  --color-ring: var(--brt-color-primary);
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@brt/design",
+  "version": "0.0.0",
+  "private": true,
+  "description": "BRT design tokens (internal) — ใช้ผ่าน adapter เท่านั้น ไม่ publish",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "scripts": {
+    "build": "tsup && tsx scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "types": "./dist/index.d.ts"
+}

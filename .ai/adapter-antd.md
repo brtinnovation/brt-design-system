@@ -2,38 +2,47 @@
 
 ## สิ่งที่ export
 
-| Export              | หน้าที่                                                                     |
-| ------------------- | --------------------------------------------------------------------------- |
-| `brtThemeConfig`    | antd `ThemeConfig` ที่ map จาก semantic token — ให้โปรเจกต์ merge เองได้     |
-| `BrtConfigProvider` | ห่อ `ConfigProvider` ใส่ theme + locale ไทยให้ (override ได้ผ่าน props)     |
-| component ของ BRT   | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ เช่น DataTable, SearchFilter, StatusTag |
-
-การใช้งานในโปรเจกต์:
+| Export                        | หน้าที่                                                                                                         |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `BrtConfigProvider`           | ห่อ `ConfigProvider` ใส่ theme ของ `brand` + `mode`, locale ไทย และตั้ง `data-brand` / `data-mode` ที่ `<html>` |
+| `getThemeConfig(brand, mode)` | antd `ThemeConfig` ของ brand นั้น — ให้โปรเจกต์ merge เองได้                                                    |
+| component ของ BRT             | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ เช่น DataTable, SearchFilter, StatusTag                            |
 
 ```tsx
-import { BrtConfigProvider, Button, DatePicker, Select } from '@brt/antd';
+import { BrtConfigProvider, Button, DatePicker } from '@brt/antd';
+
+<BrtConfigProvider brand="brt">
+  <Button type="primary">บันทึก</Button>
+</BrtConfigProvider>;
 ```
+
+component ทุกตัวของ antd อ่าน `colorPrimary` ฯลฯ จาก context ของ provider แล้วคำนวณเฉด hover/active/bg เอง โปรเจกต์ไม่ต้องตั้งทีละ component
 
 ## Mapping token → antd
 
-- mapping ทั้งหมดอยู่ใน `packages/antd/src/theme/` ที่เดียว
+- mapping อยู่ใน `packages/antd/src/theme/` ที่เดียว และต้อง **map semantic token ครบทุกตัว** (coverage test)
 - ระดับ global ใช้ `token` (`colorPrimary`, `colorSuccess`, `borderRadius`, `fontFamily` ...) ระดับ component ใช้ `components.<Name>`
-- ใช้ semantic token เท่านั้น เช่น `colorPrimary: tokens.color.primary`
-- ถ้าต้องตั้งค่า component ที่ไม่มี token รองรับ ให้เพิ่ม token ใน `@brt/design` ก่อน
+- **ใช้ค่าดิบจาก `resolve(brand, mode)` ไม่ใช่ `var(--brt-*)`** — algorithm ของ antd ต้องใช้ค่าสีจริงเพื่อคำนวณเฉด ถ้าส่ง `var()` จะคำนวณไม่ได้
+- dark mode: ใช้ค่า semantic ของ mode `dark` + `theme.darkAlgorithm` ตามความเหมาะสม
 
 ## Component
 
-- **re-export component ของ antd ตามเดิม** (`Button`, `Select`, `DatePicker`, `Modal` ...) ไม่ต้อง wrap ถ้าไม่ได้เพิ่ม behavior — ธีมมาจาก `BrtConfigProvider` อยู่แล้ว
+- **re-export component ของ antd ตามเดิม** ไม่ต้อง wrap ถ้าไม่ได้เพิ่ม behavior — ธีมมาจาก provider อยู่แล้ว
 - wrap เฉพาะเมื่อมี default หรือ behavior ของ BRT จริง ๆ และต้องคง props ของ antd ไว้ครบ (`extends ButtonProps`)
-- API ใช้แบบ antd ไม่ต้องตรงกับ `@brt/shadcn` (ดู non-negotiable ข้อ 4 ใน `AGENTS.md`)
+
+## ใช้คู่กับ CSS framework ของโปรเจกต์
+
+- โปรเจกต์ใช้ style adapter คู่กันได้ (`@brt/tailwind`, `@brt/css`) — ได้สีเดียวกันเพราะ build จาก token ชุดเดียว
+- **ห้ามเอา class ของ CSS framework ไปทาสีทับ component ของ antd** (`<Button className="bg-primary">`) ใช้ได้แค่ layout รอบ ๆ (margin, grid) ถ้าต้องเปลี่ยนหน้าตา ให้แก้ `theme/`
+- antd + Tailwind: ดูเรื่องลำดับ `@layer` / preflight ใน `adapter-style.md`
 
 ## Locale ไทย / วันที่
 
-- `BrtConfigProvider` ใส่ `antd/locale/th_TH` เป็นค่าเริ่มต้น
-- DatePicker ของ antd v6 ใช้ dayjs — ถ้าต้องแสดงปี พ.ศ. ต้องตั้ง dayjs locale `th` + plugin `buddhistEra` และกำหนด `format` ให้ชัด ห้ามสันนิษฐานว่า locale ทำให้เอง
+- `BrtConfigProvider` ใส่ `antd/locale/th_TH` เป็นค่าเริ่มต้น (override ได้ผ่าน props)
+- DatePicker ใช้ dayjs — ถ้าต้องแสดงปี พ.ศ. ต้องตั้ง dayjs locale `th` + plugin `buddhistEra` และกำหนด `format` ให้ชัด
 
 ## ข้อควรระวัง
 
 - antd, React เป็น peer dependency ห้าม bundle
-- ก่อนใช้ API ใด ให้ตรวจ doc ของ antd v6 — หลาย API ของ v4/v5 ถูกเปลี่ยนหรือเลิกใช้ (เช่น props ที่เปลี่ยนชื่อ, CSS-in-JS / CSS variables mode)
-- ตรวจความเข้ากันได้กับ Next.js App Router (SSR style extraction ผ่าน `@ant-design/nextjs-registry`) ใน `apps/showcase`
+- ก่อนใช้ API ใด ให้ตรวจ doc ของ antd v6 — หลาย API ของ v4/v5 ถูกเปลี่ยนหรือเลิกใช้
+- ตรวจความเข้ากันได้กับ Next.js App Router (`@ant-design/nextjs-registry`) ใน `apps/showcase`

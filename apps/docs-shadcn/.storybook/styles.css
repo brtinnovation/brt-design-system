@@ -1,0 +1,10 @@
+/* ตั้งค่าแบบเดียวกับโปรเจกต์จริง */
+@import 'tailwindcss';
+@import '@brt/shadcn/styles.css';
+@source '../src';
+
+/* พื้นหลังทั้งหน้าตาม mode ที่เลือก */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}

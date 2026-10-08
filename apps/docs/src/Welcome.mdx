@@ -1,0 +1,15 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Welcome" />
+
+# BRT Design System
+
+Storybook รวมของทุก package — แต่ละกลุ่มใน sidebar คือ Storybook ของ package นั้น (render แยก iframe)
+
+- **@brt/design — Tokens** — สีทุก palette, semantic color ของแต่ละ brand × mode, typography, scale และตาราง Tailwind / CSS
+- **@brt/antd** — component ของ Ant Design v6 ภายใต้ `BrtConfigProvider`
+- **@brt/shadcn** — component ของ shadcn/ui บน Tailwind v4
+
+เลือก **brand** และ **mode** จาก toolbar ด้านบนของแต่ละกลุ่ม
+
+รันทั้งหมดด้วย `pnpm storybook` ที่ root แล้วเปิด http://localhost:6006

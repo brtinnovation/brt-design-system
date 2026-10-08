@@ -1,0 +1,27 @@
+{
+  "name": "@brt/tailwind",
+  "version": "0.0.0",
+  "description": "BRT design tokens สำหรับ Tailwind CSS v4",
+  "license": "UNLICENSED",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./theme.css": "./dist/theme.css",
+    "./tokens.css": "./dist/tokens.css"
+  },
+  "scripts": {
+    "build": "tsx scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@brt/design": "workspace:*",
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

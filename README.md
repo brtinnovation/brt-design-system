@@ -1,23 +1,36 @@
 # brt-design-system
 
-Monorepo ของ BRT Design System — design token ชุดเดียว ส่งออกเป็น 3 npm packages
-
-| Package       | ใช้เมื่อ                                    | ติดตั้ง                                   |
-| ------------- | ------------------------------------------- | ----------------------------------------- |
-| `@brt/design` | ต้องการแค่ token (เขียน UI เอง)              | `pnpm add @brt/design`                    |
-| `@brt/antd`   | โปรเจกต์ใช้ Ant Design v6                    | `pnpm add @brt/design @brt/antd antd`     |
-| `@brt/shadcn` | โปรเจกต์ใช้ Tailwind v4 + shadcn/ui          | `pnpm add @brt/design @brt/shadcn`        |
+Monorepo ของ BRT Design System — design token ของทุก brand อยู่ที่เดียว ส่งให้โปรเจกต์ผ่าน adapter
 
 > 🚧 ยังอยู่ระหว่างวางโครงสร้าง — แผนและสถาปัตยกรรมอยู่ใน [`.ai/`](.ai/) เริ่มจาก [`.ai/architecture.md`](.ai/architecture.md)
 
+## เลือก package
+
+เลือก **component adapter** ตาม UI library (ไม่ใช้ก็ได้) + **style adapter** ตาม CSS framework ของโปรเจกต์
+
+| Package         | ประเภท    | ใช้เมื่อ                                                                  |
+| --------------- | --------- | ------------------------------------------------------------------------- |
+| `@brt/antd`     | Component | โปรเจกต์ใช้ Ant Design v6                                                 |
+| `@brt/shadcn`   | Component | โปรเจกต์ใช้ shadcn/ui (รวม `@brt/tailwind` มาให้แล้ว)                     |
+| `@brt/tailwind` | Style     | โปรเจกต์ใช้ Tailwind CSS v4                                               |
+| `@brt/css`      | Style     | โปรเจกต์ใช้ CSS framework อื่น (styled-components, Sass, CSS Modules ...) |
+
+| โปรเจกต์                 | ติดตั้ง                                 |
+| ------------------------ | --------------------------------------- |
+| antd + Tailwind          | `pnpm add @brt/antd @brt/tailwind antd` |
+| antd + styled-components | `pnpm add @brt/antd @brt/css antd`      |
+| shadcn                   | `pnpm add @brt/shadcn`                  |
+
+`@brt/design` (token) เป็น package ภายใน ไม่ได้ publish — ใช้ผ่าน adapter เท่านั้น
+
 ## การใช้งาน
 
-**Ant Design**
+**antd** — ตั้ง brand ที่ provider
 
 ```tsx
-import { BrtConfigProvider, Button, DatePicker } from '@brt/antd';
+import { BrtConfigProvider, Button } from '@brt/antd';
 
-<BrtConfigProvider>
+<BrtConfigProvider brand="brt">
   <Button type="primary">บันทึก</Button>
 </BrtConfigProvider>;
 ```
@@ -25,9 +38,8 @@ import { BrtConfigProvider, Button, DatePicker } from '@brt/antd';
 **shadcn / Tailwind v4**
 
 ```css
-/* app/globals.css */
 @import 'tailwindcss';
-@import '@brt/shadcn/styles.css';
+@import '@brt/shadcn/styles.css'; /* หรือ '@brt/tailwind/theme.css' ถ้าไม่ใช้ component */
 ```
 
 ```tsx
@@ -36,19 +48,18 @@ import { Button } from '@brt/shadcn';
 <Button variant="default">บันทึก</Button>;
 ```
 
-**เขียน UI เอง**
+**CSS framework อื่น**
 
-```ts
-import '@brt/design/tokens.css';
+```tsx
+import '@brt/css/tokens.css';
+import { vars } from '@brt/css';
+
+const Card = styled.div`
+  background: ${vars.color.bg.surface};
+`;
 ```
 
-```css
-.my-button {
-  background: var(--brt-color-primary);
-  border-radius: var(--brt-radius-md);
-  padding: var(--brt-spacing-sm);
-}
-```
+**brand / mode** — โปรเจกต์ที่ไม่มี provider ตั้งที่ `<html data-brand="brt" data-mode="light">` ไม่ตั้ง = `brt` + `light`
 
 ## Development
 
@@ -57,7 +68,8 @@ import '@brt/design/tokens.css';
 ```bash
 pnpm install
 pnpm build        # turbo build ทุก package
-pnpm dev          # Storybook (apps/docs)
+pnpm storybook    # Storybook ทุก package → http://localhost:6006
+pnpm test         # รวม token coverage test ของทุก adapter
 pnpm changeset    # บันทึกการเปลี่ยนแปลงก่อนเปิด PR
 pnpm format       # prettier
 ```

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    // tsup (dts) ตั้ง baseUrl ภายใน ซึ่ง TypeScript 6 ประกาศ deprecated — ลบได้เมื่อ tsup รองรับ
+    "ignoreDeprecations": "6.0",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"]
+  }
+}
