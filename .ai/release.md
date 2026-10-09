@@ -58,7 +58,7 @@ changeset config ตั้ง `baseBranch: "main"`
 | `exports`                | `import` / `require` แยก `types` ของตัวเอง (`.d.ts` / `.d.cts`) ทุก entry — ตรวจด้วย `npx @arethetypeswrong/cli <tarball>` |
 | `publishConfig.access`   | `public` (scoped package ต้องตั้ง)                                                                                         |
 | `scripts.prepublishOnly` | `pnpm run build && pnpm run test`                                                                                          |
-| `engines.node`           | `>=20`                                                                                                                     |
+| `engines.node`           | `>=24`                                                                                                                     |
 | `license`                | `UNLICENSED` + หัวข้อ `## License` ท้าย README: `UNLICENSED - Internal use only for BRT Innovation`                        |
 | `repository`             | `brtinnovation/brt-design-system` + `directory`                                                                            |
 
