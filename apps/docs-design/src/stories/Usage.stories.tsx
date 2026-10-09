@@ -16,11 +16,15 @@ for (const [, name, brt] of themeCss.matchAll(
   toTailwindVar.set(brt!, `@utility ${name}`);
 
 const namespaces: [string, (k: string) => string][] = [
-  ['--color-', (k) => `bg-${k} text-${k} border-${k}`],
+  ['--text-color-', (k) => `text-${k}`],
+  ['--background-color-', (k) => `bg-${k}`],
+  ['--border-color-', (k) => `border-${k}`],
+  ['--color-', (k) => `ring-${k}`],
   ['--text-', (k) => `text-${k}`],
   ['--font-weight-', (k) => `font-${k}`],
   ['--font-', (k) => `font-${k}`],
   ['--leading-', (k) => `leading-${k}`],
+  ['--tracking-', (k) => `tracking-${k}`],
   ['--radius-', (k) => `rounded-${k}`],
   ['--shadow-', (k) => `shadow-${k}`],
   ['--spacing-', (k) => `p-${k} m-${k} gap-${k}`],

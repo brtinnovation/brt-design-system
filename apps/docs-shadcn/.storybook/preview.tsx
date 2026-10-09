@@ -11,7 +11,7 @@ const preview: Preview = {
     (Story, { globals }) => {
       applyBrandMode(globals.brand, globals.mode);
       return (
-        <div className="bg-background font-sans text-foreground">
+        <div className="bg-primary font-sans text-primary">
           <Story />
         </div>
       );

@@ -45,7 +45,9 @@ import { BrtConfigProvider, Button } from '@brt/antd';
 ```tsx
 import { Button } from '@brt/shadcn';
 
-<Button variant="default">บันทึก</Button>;
+<Button variant="primary" intent="brand">
+  บันทึก
+</Button>;
 ```
 
 **CSS framework อื่น**
@@ -55,7 +57,7 @@ import '@brt/css/tokens.css';
 import { vars } from '@brt/css';
 
 const Card = styled.div`
-  background: ${vars.color.bg.surface};
+  background: ${vars.color.bg.secondary};
 `;
 ```
 

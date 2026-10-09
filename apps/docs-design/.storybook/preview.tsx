@@ -5,7 +5,7 @@ import { applyBrandMode, createGlobalTypes, initialGlobals } from './globals';
 
 const style = document.createElement('style');
 style.textContent = tokensCss;
-style.textContent += '\nbody { background: var(--brt-color-bg-base); }';
+style.textContent += '\nbody { background: var(--brt-color-bg-primary); }';
 document.head.appendChild(style);
 
 const preview: Preview = {
@@ -16,7 +16,7 @@ const preview: Preview = {
     (Story, { globals }) => {
       applyBrandMode(globals.brand, globals.mode);
       return (
-        <div style={{ fontFamily: 'var(--brt-font-sans)', color: 'var(--brt-color-text-base)' }}>
+        <div style={{ fontFamily: 'var(--brt-font-sans)', color: 'var(--brt-color-text-primary)' }}>
           <Story />
         </div>
       );

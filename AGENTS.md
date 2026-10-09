@@ -12,6 +12,20 @@
 
 โปรเจกต์เลือก **component adapter 1 ตัว** (หรือไม่ใช้เลย) + **style adapter ตาม CSS framework ของตัวเอง** เช่น antd + Tailwind = `@brt/antd` + `@brt/tailwind`
 
+## ขอบเขตของ design system
+
+design system ดูแล **token (สี, ตัวอักษร, scale) และ component กลาง** เท่านั้น — adapter (`@brt/shadcn`, `@brt/antd` …) ถูกใช้แบบ **library** เหมือน antd
+
+| อยู่ใน design system                        | ไม่อยู่ใน design system                                              |
+| ------------------------------------------- | -------------------------------------------------------------------- |
+| token ทุกตัว และค่าของทุก brand             | component ที่โปรเจกต์ custom เอง (เช่น Input ที่ดึง shadcn/ui ไปแก้) |
+| component กลางที่หลายโปรเจกต์ใช้แบบเดียวกัน | section, layout และ component เฉพาะของโปรเจกต์ใดโปรเจกต์หนึ่ง        |
+| การแก้บั๊กของ component กลาง                | การปรับหน้าตาให้ตรงกับ design ของโปรเจกต์เดียว                       |
+
+- โปรเจกต์ **ทำ component ของตัวเองได้** ใน repo ของโปรเจกต์ (ห่อ adapter หรือ fork โค้ด shadcn/ui) โดยใช้ token จาก adapter — ไม่ต้องรอ design system
+- อย่ารับ component เฉพาะโปรเจกต์เข้ามาที่นี่ — รับเมื่อ **มีโปรเจกต์มากกว่าหนึ่งต้องการแบบเดียวกัน** แล้วค่อยย้ายมาเป็น component กลาง
+- token ไม่มีข้อยกเว้น — โปรเจกต์ห้ามสร้าง token ของตัวเอง สี/ค่าใหม่ต้องเพิ่มที่นี่
+
 > ไฟล์นี้เป็นตัวชี้ทางเท่านั้น รายละเอียดแต่ละเรื่องอยู่ใน `.ai/` — **เปิดอ่านไฟล์ที่ตรงกับงานก่อนลงมือ ห้ามเดาจากความจำ**
 > repo นี้อยู่ใน hub `brt-hub` (`design-system/brt-design-system`) แต่ใช้งานเดี่ยว ๆ ได้
 
@@ -46,7 +60,7 @@ pnpm changeset      # บันทึกการเปลี่ยนแปล�
 1. **`@brt/design` เป็น private และไม่มี dependency กับ framework ใด** — ห้าม import antd / Tailwind / React การแปลงให้เข้ากับ framework อยู่ใน adapter เท่านั้น
 2. **adapter ใส่ `@brt/design` ไว้ใน `devDependencies` และ bundle เข้าไป** (tsup `noExternal`) — ถ้าใส่ใน `dependencies` โปรเจกต์จะติดตั้งไม่ได้เพราะ package นี้ไม่ได้ publish
 3. **ค่าการออกแบบทุกค่ามาจาก token** — ห้าม hardcode hex, px, radius หรือ shadow ใน adapter ถ้าไม่มี token ที่ต้องการ ให้เพิ่มใน `@brt/design` ก่อน
-4. **adapter ใช้ semantic token ไม่ใช่ primitive** — `color.primary` ✅ `color.blue.600` ❌ (ยกเว้น adapter ที่ framework ต้องการ palette scale — ดู `.ai/tokens.md`)
+4. **adapter ใช้ semantic token ไม่ใช่ primitive** — `color.text.brand` ✅ `palette.brtTeal['-40']` ❌ (ยกเว้น adapter ที่ framework ต้องการ palette scale — ดู `.ai/tokens.md`)
 5. **adapter ทุกตัวต้อง map semantic token ครบทุกตัว** — บังคับด้วย coverage test ห้ามข้ามหรือ skip test
 6. **brand เลือกค่าจาก primitive เท่านั้น** — ห้ามใส่ค่าดิบ (hex, ชื่อฟอนต์) ในไฟล์ brand ดู `.ai/brands.md`
 7. **API ของ component adapter แต่ละตัวไม่ต้องเหมือนกัน** — ใช้ props ตาม library ต้นทาง สิ่งที่ต้องเหมือนคือ token เท่านั้น

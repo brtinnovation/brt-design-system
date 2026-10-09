@@ -2,11 +2,11 @@
 
 ## สิ่งที่ export
 
-| Export                        | หน้าที่                                                                                                         |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `BrtConfigProvider`           | ห่อ `ConfigProvider` ใส่ theme ของ `brand` + `mode`, locale ไทย และตั้ง `data-brand` / `data-mode` ที่ `<html>` |
-| `getThemeConfig(brand, mode)` | antd `ThemeConfig` ของ brand นั้น — ให้โปรเจกต์ merge เองได้                                                    |
-| component ของ BRT             | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ เช่น DataTable, SearchFilter, StatusTag                            |
+| Export                                  | หน้าที่                                                                                                         |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `BrtConfigProvider`                     | ห่อ `ConfigProvider` ใส่ theme ของ `brand` + `mode`, locale ไทย และตั้ง `data-brand` / `data-mode` ที่ `<html>` |
+| `getThemeConfig(brand, mode, viewport)` | antd `ThemeConfig` ของ brand นั้น (viewport เริ่มต้น `'desktop'`) — ให้โปรเจกต์ merge เองได้                    |
+| component ของ BRT                       | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ เช่น DataTable, SearchFilter, StatusTag                            |
 
 ```tsx
 import { BrtConfigProvider, Button, DatePicker } from '@brt/antd';
@@ -22,7 +22,9 @@ component ทุกตัวของ antd อ่าน `colorPrimary` ฯลฯ
 
 - mapping อยู่ใน `packages/antd/src/theme/` ที่เดียว และต้อง **map semantic token ครบทุกตัว** (coverage test)
 - ระดับ global ใช้ `token` (`colorPrimary`, `colorSuccess`, `borderRadius`, `fontFamily` ...) ระดับ component ใช้ `components.<Name>`
-- **ใช้ค่าดิบจาก `resolve(brand, mode)` ไม่ใช่ `var(--brt-*)`** — algorithm ของ antd ต้องใช้ค่าสีจริงเพื่อคำนวณเฉด ถ้าส่ง `var()` จะคำนวณไม่ได้
+- `colorPrimary` = `color.button.primary.brand.bg` (BRT Teal -40) ไม่ใช่ `bg.brand` (00) เพราะ antd ใช้สีนี้กับปุ่มและตัวอักษร — ปุ่ม default / text ของ antd map จาก Figma Button Secondary / Tertiary (Neutral) ใน `components.Button`
+- antd token ละหนึ่ง semantic token — test ตรวจว่าไม่ map ซ้ำ
+- **ใช้ค่าดิบจาก `resolve(brand, mode, viewport)` ไม่ใช่ `var(--brt-*)`** — algorithm ของ antd ต้องใช้ค่าสีจริงเพื่อคำนวณเฉด ถ้าส่ง `var()` จะคำนวณไม่ได้
 - dark mode: ใช้ค่า semantic ของ mode `dark` + `theme.darkAlgorithm` ตามความเหมาะสม
 
 ## Component

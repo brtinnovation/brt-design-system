@@ -26,6 +26,8 @@ pnpm build-storybook  # static build ลง apps/*/storybook-static (ยัง�
 - story อยู่ใน `apps/docs-<name>/src/stories/*.stories.tsx`
 - **หน้า token สร้างจากโค้ดเสมอ** (`primitive`, `resolve()`, `theme.css` ของ `@brt/tailwind`) — ห้ามพิมพ์ค่าสีหรือชื่อ class ลงใน story เอง เพิ่ม palette / brand / token แล้วหน้าอัปเดตเอง
 - toolbar **Brand / Mode** ตั้งค่าใน `.storybook/globals.ts` ของแต่ละ app — `docs-design` อ่านรายชื่อ brand จาก `@brt/design` ส่วน antd / shadcn ใช้ค่าเริ่มต้น `['brt']` เมื่อเพิ่ม brand ใหม่ให้ส่งรายชื่อเข้า `createGlobalTypes()` ด้วย
+- toolbar Mode มีแค่ Light จนกว่า `@brt/design` จะมีค่า dark — เพิ่ม item `dark` ใน `globals.ts` พร้อมกับเพิ่ม `'dark'` ใน `modes`
+- ฟอนต์ของ brand (Kanit) โหลดจาก Google Fonts ใน `.storybook/preview-head.html` ของแต่ละ app — เพิ่มฟอนต์ใหม่ใน primitive ต้องเพิ่มที่นี่ด้วย
 - toolbar อยู่ในแต่ละ Storybook ของ package — สลับ brand / mode ที่กลุ่มหนึ่งไม่ส่งผลไปกลุ่มอื่น
 - `docs-shadcn` ตั้ง Tailwind แบบเดียวกับโปรเจกต์จริง (`@import 'tailwindcss'; @import '@brt/shadcn/styles.css';`) — ถ้า style หายใน Storybook แปลว่าโปรเจกต์จริงก็หายด้วย
 

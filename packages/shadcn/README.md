@@ -10,7 +10,9 @@ BRT components บน shadcn/ui + Tailwind CSS v4 (theme จาก `@brt/tailwin
 ```tsx
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@brt/shadcn';
 
-<Button variant="default">บันทึก</Button>;
+<Button variant="primary" intent="brand">
+  บันทึก
+</Button>;
 ```
 
-สลับ brand / mode ด้วย `<html data-brand="brt" data-mode="dark">`
+สลับ brand ด้วย `<html data-brand="brt">` (dark mode ยังไม่มีค่าจาก Figma)

@@ -10,7 +10,7 @@ export const Example: StoryObj = {
       <CardHeader>
         <CardTitle>แพ็กเกจเริ่มต้น</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-md">
+      <CardContent className="flex flex-col gap-16">
         <p>เหมาะสำหรับทีมเล็กที่เพิ่งเริ่มต้นใช้งาน</p>
         <Button className="self-start">เลือกแพ็กเกจ</Button>
       </CardContent>

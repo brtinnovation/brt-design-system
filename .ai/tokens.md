@@ -10,45 +10,71 @@ Figma (designer) ──แปลง──▶ packages/design/src/**/*.ts ──b
 - token เริ่มจาก Figma แต่ **ไฟล์ TS ใน `packages/design/src/` คือแหล่งความจริง** — เมื่อ Figma เปลี่ยน ให้แปลงแล้วแก้ไฟล์ TS ใน PR ไม่ใช่ sync อัตโนมัติ
 - ถ้า Figma กับโค้ดไม่ตรงกัน ให้ยึดโค้ด แล้วแจ้ง designer ให้แก้ Figma
 - รับค่าจาก Figma ได้ผ่าน Figma MCP (`get_variable_defs`) หรือไฟล์ export — ไฟล์ export ดิบไม่ต้อง commit
-- Figma variable **collection/mode** ควรตรงกับโครงข้างล่าง: primitive 1 collection, brand = mode, light/dark = mode
+- **Figma มี mapping เกินที่โค้ดใช้** (ทำไว้สำหรับงานใน Figma) — รับเฉพาะส่วนที่อยู่ในตาราง "รับจาก Figma" ข้างล่าง ห้ามคัดลอกทั้งไฟล์
+
+### รับจาก Figma
+
+| Figma collection               | ใน `@brt/design`                                       | สิ่งที่ตัดออก                                                                                                                                |
+| ------------------------------ | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `01-primitive-color`           | `primitive/color.ts` (`palette`, `alpha`, white/black) | Midnight Sky (ค่าซ้ำ Dusky Sky), `_Template`, ตัวเลขที่หลงมา                                                                                 |
+| `02-alias`                     | `brands/*.ts` (Brand/<name>, System, Neutral)          | กลุ่ม Utility, Template                                                                                                                      |
+| `03-semantic`                  | `semantic/` → `color.text/bg/border/button`            | Foreground / Icon (ซ้ำ Text), Quaternary–Senary, `*_darker`, ระดับ Light/Lighter/Dark/Darker, Component/Utility, Gradient, Input, Breadcrumb |
+| `04-space`                     | `primitive/scale.ts` (`spacing`)                       | —                                                                                                                                            |
+| `05-radius` Desktop/Mobile     | `primitive/scale.ts` (`radius.desktop/mobile`)         | —                                                                                                                                            |
+| `06-typography` Desktop/Mobile | `primitive/typography.ts`                              | Paragraph แยกตาม weight, Link / Label / Subtitle / Placeholder / Value List / All Caps (ชื่อซ้ำของ body)                                     |
+
+ถ้างานต้องการสิ่งที่ตัดออกไป ให้เพิ่มกลับเป็น semantic token ทีละตัวเมื่อมีผู้ใช้จริง
 
 ## สามชั้น: primitive → brand → semantic
 
 ```
-primitive   สีทุก palette (แต่ละ palette มี scale 50–950), ฟอนต์ทั้งหมด,
-            spacing, radius, shadow, breakpoint, z-index
+primitive   สีทุก palette (scale แบบ Figma: -90 เข้มสุด … 00 สีหลัก … +90 อ่อนสุด),
+            alpha, ฟอนต์ทั้งหมด, spacing, radius, shadow, breakpoint, z-index
      │
-brand       เลือกจาก primitive: palette ของ primary / secondary,
-     │      (ไม่บังคับ) palette ของ success / warning / error / info, font family
+brand       เลือกจาก primitive: palette ของ primary / secondary / tertiary,
+     │      (ไม่บังคับ) success / warning / error / info / neutral, font family
      │      ดู brands.md
      ▼
-semantic    resolve(brand, mode) → color.primary, color.primaryHover,
-            color.bg.surface, color.text.muted, color.border.default, font.sans ...
+semantic    resolve(brand, mode, viewport) → color.text.primary, color.bg.secondary,
+            color.border.brand, color.button.primary.brand.bg, fontSize.h1, font.sans ...
 ```
 
 - **primitive** เก็บทุกค่าที่มีได้ — ทุก brand หยิบจากชุดเดียวกัน
 - **brand** แค่ _เลือก_ ไม่สร้างค่าใหม่ (ดู non-negotiable ข้อ 6)
-- **semantic** คือกฎกลางว่า shade ไหนใช้กับอะไร เช่น light: `primary = palette[brand.primary][600]`, dark: `[400]` — กฎนี้เขียนครั้งเดียวใน `semantic/` ใช้กับทุก brand ไม่ต้องกำหนดใน brand
+- **semantic** คือกฎกลางว่าขั้นไหนใช้กับอะไร เช่น `text.brand = palette[brand.primary]['-40']`, `bg.secondary = palette[brand.neutral]['+95']` — กฎนี้เขียนครั้งเดียวใน `semantic/` (ตาม `03-semantic` ของ Figma) ใช้กับทุก brand ไม่ต้องกำหนดใน brand
+- scale ของ Figma **กลับทิศกับ Tailwind**: `-` = เข้มกว่าสีหลัก, `+` = อ่อนกว่า ชื่อขั้นกลาง Figma เขียน `xx-00` ในโค้ดใช้ `'00'`
 - token ที่ไม่ใช่สีและฟอนต์ (spacing, radius, shadow, breakpoint, z-index) **ใช้ร่วมทุก brand** ไม่ขึ้นกับ brand
 
 ## หมวดของ token
 
-| หมวด         | ชั้น                         | ตัวอย่าง                                                                           |
-| ------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
-| `color`      | primitive → brand → semantic | primary, secondary, success, warning, error, info, neutral, bg._, text._, border.* |
-| `typography` | primitive → brand (family)   | fontFamily, fontSize, fontWeight, lineHeight                                       |
-| `spacing`    | primitive (ร่วม)             | xs, sm, md, lg, xl                                                                 |
-| `radius`     | primitive (ร่วม)             | sm, md, lg, full                                                                   |
-| `shadow`     | primitive (ร่วม)             | sm, md, lg                                                                         |
-| `breakpoint` | primitive (ร่วม)             | sm, md, lg, xl                                                                     |
-| `zIndex`     | primitive (ร่วม)             | dropdown, sticky, modal, toast                                                     |
+| หมวด                     | ชั้น                                  | ตัวอย่าง                                                                                                       |
+| ------------------------ | ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `color.text`             | semantic                              | primary, secondary, tertiary, placeholder, disabled, white, brand, brandSecondary, success … info (+ `*Hover`) |
+| `color.bg`               | semantic                              | primary, secondary, tertiary, solid, disabled, brand, brandSubtle, success / successSubtle …                   |
+| `color.border`           | semantic                              | primary, secondary, tertiary, disabled, white, brand, brandSubtle, success … info                              |
+| `color.button`           | semantic (Figma Component/Button)     | `{primary,secondary,tertiary}.{brand,neutral,error}.{bg,text,border}{,Hover}`, `disabled.*`                    |
+| `font`, `fontWeight`     | primitive → brand (family)            | sans (Kanit), light … bold                                                                                     |
+| `fontSize`, `lineHeight` | primitive (ร่วม) · **desktop/mobile** | display1–6, h1–h6, pageTitle, bodyLg–Xs, buttonLg–Sm, errorMessage · 2xs … 13xl (px)                           |
+| `letterSpacing`          | primitive (ร่วม)                      | none, wide                                                                                                     |
+| `spacing`                | primitive (ร่วม)                      | 0, 2, 4, 6, 8, 12 … 64 (ชื่อคือ px ตาม Figma)                                                                  |
+| `radius`                 | primitive (ร่วม) · **desktop/mobile** | none, xs, sm, md, lg, xl, full                                                                                 |
+| `shadow`                 | primitive (ร่วม) — ยังไม่มีใน Figma   | sm, md, lg (ค่าตัวอย่าง)                                                                                       |
+| `breakpoint`             | primitive (ร่วม) — ยังไม่มีใน Figma   | sm, md, lg, xl (ค่าตัวอย่าง)                                                                                   |
+| `zIndex`                 | primitive (ร่วม) — ยังไม่มีใน Figma   | dropdown, sticky, modal, toast (ค่าตัวอย่าง)                                                                   |
 
 หมวดที่ยังไม่ได้ตัดสินใจ: motion/duration, opacity, border-width, focus ring — เพิ่มเมื่อมีผู้ใช้จริง
 
 ## Mode (light / dark)
 
-- ตอนนี้ทำ **light** ก่อน แต่โครงต้องรองรับ dark ตั้งแต่แรก: `resolve(brand, mode)` รับ mode เสมอ และ semantic ทุกตัวต้องมีกฎของทั้งสอง mode (dark ใช้ค่าเดียวกับ light ไปก่อนได้)
-- primitive ไม่มี mode — mode เปลี่ยนแค่การเลือก shade ในชั้น semantic
+- Figma มีแค่ **light** — `modes = ['light']` แต่ type `Mode` มี `'dark'` และ `resolve(brand, mode)` รับ mode เสมอ ตอนนี้ `'dark'` ใช้กฎของ light
+- เมื่อได้ค่า dark: เพิ่มกฎใน `semantic/` แล้วเพิ่ม `'dark'` ใน `modes` — generator, test และ toolbar ของ Storybook จะครอบคลุมเอง
+- primitive ไม่มี mode — mode เปลี่ยนแค่การเลือกขั้นในชั้น semantic
+
+## Viewport (desktop / mobile)
+
+- Figma มี mode Desktop / Mobile สำหรับ **typography และ radius** — `resolve(brand, mode, viewport)` (ค่าเริ่มต้น `'mobile'`)
+- `tokens.css` เป็น mobile-first: `:root` = ค่า mobile แล้ว `@media (min-width: breakpoint[desktopBreakpoint])` override เฉพาะตัวที่ต่างกัน — `desktopBreakpoint` ตอนนี้คือ `md` (768px) **ยังต้องยืนยันกับ designer**
+- adapter ที่อ่านค่าดิบ (`@brt/antd`) เลือก viewport เอง — antd ใช้ `'desktop'`
 
 ## Adapter ใช้ชั้นไหน
 
@@ -57,18 +83,19 @@ semantic    resolve(brand, mode) → color.primary, color.primaryHover,
 
 ## Output (ใช้ภายใน adapter เท่านั้น)
 
-| Output                 | ค่าข้างใน                                       | ใช้โดย                      |
-| ---------------------- | ----------------------------------------------- | --------------------------- |
-| `resolve(brand, mode)` | semantic token ค่าดิบ (`'#0052cc'`, `8`)        | `@brt/antd` (คำนวณเฉดสีเอง) |
-| `tokens.css`           | `:root` + `[data-brand][data-mode]` → `--brt-*` | `@brt/tailwind`, `@brt/css` |
-| `vars`                 | `'var(--brt-color-primary)'`                    | `@brt/css`                  |
+| Output                           | ค่าข้างใน                                                          | ใช้โดย                      |
+| -------------------------------- | ------------------------------------------------------------------ | --------------------------- |
+| `resolve(brand, mode, viewport)` | semantic token ค่าดิบ (`'#047B7B'`, `8`)                           | `@brt/antd` (คำนวณเฉดสีเอง) |
+| `tokens.css`                     | `:root` + `[data-brand][data-mode]` + `@media` desktop → `--brt-*` | `@brt/tailwind`, `@brt/css` |
+| `vars`                           | `'var(--brt-color-text-primary)'`                                  | `@brt/css`                  |
 
 ## การตั้งชื่อ
 
-- CSS variable: `--brt-<หมวด>-<ชื่อ>` kebab-case เช่น `--brt-color-text-muted`, `--brt-radius-md`
-- TS key: camelCase ตามโครง object เช่น `color.text.muted`
+- **ชื่อตาม Figma** — `text.primary`, `bg.secondary`, `border.brand` (ไม่ใช้ชื่อแบบ shadcn เช่น `foreground`, `muted`) adapter แปลงเป็นชื่อของ framework เอง
+- CSS variable: `--brt-<หมวด>-<ชื่อ>` kebab-case เช่น `--brt-color-text-secondary`, `--brt-radius-md`
+- TS key: camelCase ตามโครง object เช่น `color.text.secondary`
 - ชื่อ TS กับ CSS แปลงกันได้ตรง ๆ (generator สร้าง CSS จาก object)
-- ค่าความยาวเก็บเป็น number (px) ใน TS เพราะ antd ต้องการ number แล้ว generator แปลงเป็น `px`/`rem` ใน CSS
+- ค่าความยาวเก็บเป็น number (px) ใน TS เพราะ antd ต้องการ number แล้ว generator แปลงเป็น `px` ใน CSS
 
 ## การเปลี่ยน token กับ semver (นับที่ adapter)
 

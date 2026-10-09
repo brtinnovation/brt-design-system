@@ -7,9 +7,9 @@ import '@brt/css/tokens.css';
 import { vars } from '@brt/css';
 
 const Card = styled.div`
-  background: ${vars.color.bg.surface};
+  background: ${vars.color.bg.secondary};
   border-radius: ${vars.radius.md};
 `;
 ```
 
-CSS ล้วน: `background: var(--brt-color-bg-surface);` — สลับ brand / mode ด้วย `<html data-brand="brt" data-mode="dark">`
+CSS ล้วน: `background: var(--brt-color-bg-secondary);` — สลับ brand ด้วย `<html data-brand="brt">` (dark mode ยังไม่มีค่าจาก Figma)

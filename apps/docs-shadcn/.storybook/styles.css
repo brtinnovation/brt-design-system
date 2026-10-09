@@ -5,6 +5,6 @@
 
 /* พื้นหลังทั้งหน้าตาม mode ที่เลือก */
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background: var(--brt-color-bg-primary);
+  color: var(--brt-color-text-primary);
 }

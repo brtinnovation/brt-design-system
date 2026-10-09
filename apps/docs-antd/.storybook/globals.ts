@@ -12,10 +12,8 @@ export function createGlobalTypes(brands: string[] = ['brt']): NonNullable<Previ
       toolbar: {
         title: 'Mode',
         icon: 'mirror',
-        items: [
-          { value: 'light', title: 'Light', icon: 'sun' },
-          { value: 'dark', title: 'Dark', icon: 'moon' },
-        ],
+        // Figma ยังไม่มีค่า dark — เพิ่ม { value: 'dark', title: 'Dark', icon: 'moon' } เมื่อ @brt/design มี mode นี้
+        items: [{ value: 'light', title: 'Light', icon: 'sun' }],
         dynamicTitle: true,
       },
     },

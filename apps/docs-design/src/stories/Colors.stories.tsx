@@ -10,7 +10,7 @@ export const Palette: StoryObj = {
   render: () => (
     <Section
       title="Palette"
-      note="primitive — ใช้ภายใน @brt/design เท่านั้น brand เลือก palette จากชุดนี้"
+      note="primitive จาก Figma — -90 เข้มสุด · 00 สีหลัก · +90 อ่อนสุด · ใช้ภายใน @brt/design เท่านั้น brand เลือก palette จากชุดนี้"
     >
       <div style={{ display: 'grid', gap: 20 }}>
         {Object.entries(primitive.palette).map(([name, scale]) => (
@@ -19,7 +19,7 @@ export const Palette: StoryObj = {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(11, minmax(72px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
                 gap: 8,
               }}
             >
@@ -30,8 +30,20 @@ export const Palette: StoryObj = {
           </div>
         ))}
         <div>
-          <div style={{ fontWeight: 600, marginBottom: 8 }}>white</div>
-          <Swatch color={primitive.white} label="white" sub={primitive.white} />
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>white / black / alpha</div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
+              gap: 8,
+            }}
+          >
+            <Swatch color={primitive.white} label="white" sub={primitive.white} />
+            <Swatch color={primitive.black} label="black" sub={primitive.black} />
+            {Object.entries(primitive.alpha).map(([name, value]) => (
+              <Swatch key={name} color={value} label="" sub={name} />
+            ))}
+          </div>
         </div>
       </div>
     </Section>
@@ -51,7 +63,7 @@ export const Semantic: StoryObj = {
     return (
       <Section
         title="Semantic colors"
-        note="ค่าที่ adapter ใช้จริง — brand เลือก palette ส่วน shade มาจากกฎกลางใน semantic/"
+        note="ค่าที่ adapter ใช้จริง — brand เลือก palette ส่วนขั้น (-40, +90 …) มาจากกฎกลางใน semantic/"
       >
         <Table
           head={['token', ...cols.map(([b, m]) => `${b} / ${m}`)]}
@@ -80,7 +92,7 @@ export const Live: StoryObj = {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
           gap: 12,
-          background: 'var(--brt-color-bg-base)',
+          background: 'var(--brt-color-bg-primary)',
           padding: 16,
           borderRadius: 12,
         }}
