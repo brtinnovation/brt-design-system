@@ -2,11 +2,23 @@
   "name": "@brt-innovation/design",
   "version": "0.0.0",
   "description": "BRT design tokens จาก Figma — primitive, semantic, defineBrand และ CSS variables (ไม่ผูกกับ framework)",
+  "keywords": [
+    "brt",
+    "design-tokens",
+    "design-system",
+    "css-variables",
+    "figma"
+  ],
   "license": "UNLICENSED",
+  "author": "BRT Innovation",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brtinnovation/brt-design-system.git",
     "directory": "packages/design"
+  },
+  "homepage": "https://github.com/brtinnovation/brt-design-system/tree/main/packages/design#readme",
+  "bugs": {
+    "url": "https://github.com/brtinnovation/brt-design-system/issues"
   },
   "type": "module",
   "files": [
@@ -20,9 +32,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./tokens.css": "./dist/tokens.css"
   },

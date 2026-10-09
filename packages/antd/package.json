@@ -2,11 +2,24 @@
   "name": "@brt-innovation/antd",
   "version": "0.0.0",
   "description": "BRT design tokens + components สำหรับ Ant Design v6",
+  "keywords": [
+    "brt",
+    "design-system",
+    "antd",
+    "ant-design",
+    "react",
+    "theme"
+  ],
   "license": "UNLICENSED",
+  "author": "BRT Innovation",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brtinnovation/brt-design-system.git",
     "directory": "packages/antd"
+  },
+  "homepage": "https://github.com/brtinnovation/brt-design-system/tree/main/packages/antd#readme",
+  "bugs": {
+    "url": "https://github.com/brtinnovation/brt-design-system/issues"
   },
   "type": "module",
   "files": [
@@ -18,14 +31,24 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./tokens": {
-      "types": "./dist/tokens.d.ts",
-      "import": "./dist/tokens.js",
-      "require": "./dist/tokens.cjs"
+      "import": {
+        "types": "./dist/tokens.d.ts",
+        "default": "./dist/tokens.js"
+      },
+      "require": {
+        "types": "./dist/tokens.d.cts",
+        "default": "./dist/tokens.cjs"
+      }
     }
   },
   "publishConfig": {

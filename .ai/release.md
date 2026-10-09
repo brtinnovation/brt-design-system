@@ -51,16 +51,16 @@ changeset config ตั้ง `baseBranch: "main"`
 
 ข้อกำหนดของ package (ตั้งไว้แล้วใน `package.json` ทุกตัว — ตามแบบ `@brt-innovation/aether-utility`):
 
-| field                    | ค่า                                                  |
-| ------------------------ | ---------------------------------------------------- |
-| `name`                   | `@brt-innovation/<name>`                             |
-| `files`                  | `["dist"]` — publish แค่ build output                |
-| `exports`                | `types` / `import` (ESM) / `require` (CJS) ทุก entry |
-| `publishConfig.access`   | `public` (scoped package ต้องตั้ง)                   |
-| `scripts.prepublishOnly` | `pnpm run build && pnpm run test`                    |
-| `engines.node`           | `>=20`                                               |
-| `license`                | `UNLICENSED` (ใช้ภายใน BRT Innovation)               |
-| `repository`             | `brtinnovation/brt-design-system` + `directory`      |
+| field                    | ค่า                                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `name`                   | `@brt-innovation/<name>`                                                                                                   |
+| `files`                  | `["dist"]` — publish แค่ build output                                                                                      |
+| `exports`                | `import` / `require` แยก `types` ของตัวเอง (`.d.ts` / `.d.cts`) ทุก entry — ตรวจด้วย `npx @arethetypeswrong/cli <tarball>` |
+| `publishConfig.access`   | `public` (scoped package ต้องตั้ง)                                                                                         |
+| `scripts.prepublishOnly` | `pnpm run build && pnpm run test`                                                                                          |
+| `engines.node`           | `>=20`                                                                                                                     |
+| `license`                | `UNLICENSED` + หัวข้อ `## License` ท้าย README: `UNLICENSED - Internal use only for BRT Innovation`                        |
+| `repository`             | `brtinnovation/brt-design-system` + `directory`                                                                            |
 
 - ก่อน publish ครั้งแรกต้องยืนยันว่าคนที่ release เป็นสมาชิก org `brt-innovation` บน npmjs ที่มีสิทธิ์ publish (org มีอยู่แล้ว — `@brt-innovation/aether-utility` ใช้ scope นี้)
 - ตรวจด้วย `make pack` ว่า `dependencies` ของ adapter เป็น `@brt-innovation/design: ^x.y.z` (ไม่มี `workspace:`) และใน tarball มีแค่ `dist`
