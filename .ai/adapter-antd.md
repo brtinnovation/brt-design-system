@@ -1,17 +1,19 @@
-# Adapter: `@brt/antd` (Ant Design v6)
+# Adapter: `@brt-innovation/antd` (Ant Design v6)
 
 ## สิ่งที่ export
 
-| Export                                  | หน้าที่                                                                                                         |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `BrtConfigProvider`                     | ห่อ `ConfigProvider` ใส่ theme ของ `brand` + `mode`, locale ไทย และตั้ง `data-brand` / `data-mode` ที่ `<html>` |
-| `getThemeConfig(brand, mode, viewport)` | antd `ThemeConfig` ของ brand นั้น (viewport เริ่มต้น `'desktop'`) — ให้โปรเจกต์ merge เองได้                    |
-| component ของ BRT                       | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ เช่น DataTable, SearchFilter, StatusTag                            |
+| Export                                  | หน้าที่                                                                                                                     |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `BrtConfigProvider`                     | ห่อ `ConfigProvider` ใส่ theme ของ `brand` (object จาก `defineBrand()`, ค่าเริ่มต้น `defaultBrand`) + `mode` และ locale ไทย |
+| `getThemeConfig(brand, mode, viewport)` | antd `ThemeConfig` ของ brand นั้น (viewport เริ่มต้น `'desktop'`) — ให้โปรเจกต์ merge เองได้                                |
+| component ของ BRT                       | เฉพาะที่ antd ไม่มีหรือ BRT จัด layout เฉพาะ — ตอนนี้มี `StatusTag` (อนาคต: DataTable, SearchFilter …)                      |
+| `@brt-innovation/antd/tokens`           | ทุกอย่างของ `@brt-innovation/design` (`defineBrand`, `resolve`, `vars` …) — entry แยก ไม่มี `'use client'`                  |
 
 ```tsx
-import { BrtConfigProvider, Button, DatePicker } from '@brt/antd';
+import { BrtConfigProvider, Button, DatePicker } from '@brt-innovation/antd';
+import { brand } from '@/theme/brand'; // defineBrand() ของโปรเจกต์ — ดู brands.md
 
-<BrtConfigProvider brand="brt">
+<BrtConfigProvider brand={brand}>
   <Button type="primary">บันทึก</Button>
 </BrtConfigProvider>;
 ```
@@ -25,7 +27,7 @@ component ทุกตัวของ antd อ่าน `colorPrimary` ฯลฯ
 - `colorPrimary` = `color.button.primary.brand.bg` (BRT Teal -40) ไม่ใช่ `bg.brand` (00) เพราะ antd ใช้สีนี้กับปุ่มและตัวอักษร — ปุ่ม default / text ของ antd map จาก Figma Button Secondary / Tertiary (Neutral) ใน `components.Button`
 - antd token ละหนึ่ง semantic token — test ตรวจว่าไม่ map ซ้ำ
 - **ใช้ค่าดิบจาก `resolve(brand, mode, viewport)` ไม่ใช่ `var(--brt-*)`** — algorithm ของ antd ต้องใช้ค่าสีจริงเพื่อคำนวณเฉด ถ้าส่ง `var()` จะคำนวณไม่ได้
-- dark mode: ใช้ค่า semantic ของ mode `dark` + `theme.darkAlgorithm` ตามความเหมาะสม
+- dark mode: `mode="dark"` เลือก `theme.darkAlgorithm` แล้ว แต่ token ยังใช้ค่า light (Figma ยังไม่มี dark) — เมื่อ design มีค่า dark จะได้เองผ่าน `resolve(brand, 'dark')`
 
 ## Component
 
@@ -34,9 +36,11 @@ component ทุกตัวของ antd อ่าน `colorPrimary` ฯลฯ
 
 ## ใช้คู่กับ CSS framework ของโปรเจกต์
 
-- โปรเจกต์ใช้ style adapter คู่กันได้ (`@brt/tailwind`, `@brt/css`) — ได้สีเดียวกันเพราะ build จาก token ชุดเดียว
+- CSS ของโปรเจกต์ (Tailwind ฯลฯ) อ่าน `var(--brt-*)` ได้สีเดียวกับ antd เพราะมาจาก token และ brand ชุดเดียวกัน
 - **ห้ามเอา class ของ CSS framework ไปทาสีทับ component ของ antd** (`<Button className="bg-primary">`) ใช้ได้แค่ layout รอบ ๆ (margin, grid) ถ้าต้องเปลี่ยนหน้าตา ให้แก้ `theme/`
-- antd + Tailwind: ดูเรื่องลำดับ `@layer` / preflight ใน `adapter-style.md`
+- antd + Tailwind: ดูเรื่องลำดับ `@layer` / preflight ใน `project-setup.md`
+- provider **ไม่ตั้ง** `data-brand` ที่ `<html>` แล้ว — ถ้าโปรเจกต์มี CSS ของตัวเองที่อ่าน `--brt-*` ให้ใส่ `generateBrandCss(brand)` เอง (ดู `project-setup.md`)
+- ส่ง `brand` ที่ประกาศไว้นอก component (module scope) — object ใหม่ทุก render ทำให้ `useMemo` คำนวณ theme ใหม่ทุกครั้ง
 
 ## Locale ไทย / วันที่
 
@@ -47,4 +51,4 @@ component ทุกตัวของ antd อ่าน `colorPrimary` ฯลฯ
 
 - antd, React เป็น peer dependency ห้าม bundle
 - ก่อนใช้ API ใด ให้ตรวจ doc ของ antd v6 — หลาย API ของ v4/v5 ถูกเปลี่ยนหรือเลิกใช้
-- ตรวจความเข้ากันได้กับ Next.js App Router (`@ant-design/nextjs-registry`) ใน `apps/showcase`
+- ยังไม่มีแอปทดสอบแบบโปรเจกต์จริง — ใช้กับ Next.js App Router ต้องตั้ง `@ant-design/nextjs-registry` ในโปรเจกต์ และทดสอบกับโปรเจกต์แรกที่ใช้ antd

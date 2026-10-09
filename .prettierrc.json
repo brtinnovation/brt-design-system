@@ -4,8 +4,5 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "printWidth": 100,
-  "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "./packages/shadcn/src/styles/styles.css",
-  "tailwindFunctions": ["cn", "cva", "clsx"]
+  "endOfLine": "lf"
 }

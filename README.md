@@ -1,67 +1,65 @@
 # brt-design-system
 
-Monorepo ของ BRT Design System — design token ของทุก brand อยู่ที่เดียว ส่งให้โปรเจกต์ผ่าน adapter
+Monorepo ของ BRT Design System — design token จาก Figma, component ของ antd และตารางแปลง shadcn/ui → token · publish ขึ้น npmjs ทีละ package
 
-> 🚧 ยังอยู่ระหว่างวางโครงสร้าง — แผนและสถาปัตยกรรมอยู่ใน [`.ai/`](.ai/) เริ่มจาก [`.ai/architecture.md`](.ai/architecture.md)
+## ส่วนประกอบ
 
-## เลือก package
+| ส่วน                     | ส่งให้โปรเจกต์ | ใช้เมื่อ                                                            |
+| ------------------------ | -------------- | ------------------------------------------------------------------- |
+| `@brt-innovation/design` | npm package    | ทุกโปรเจกต์ — token (CSS variables / TS), `defineBrand()`           |
+| `@brt-innovation/antd`   | npm package    | โปรเจกต์ใช้ Ant Design v6                                           |
+| `.ai/shadcn-mapping.md`  | เอกสาร         | โปรเจกต์ใช้ shadcn/ui — port component เองแล้วแปลง class เป็น token |
 
-เลือก **component adapter** ตาม UI library (ไม่ใช้ก็ได้) + **style adapter** ตาม CSS framework ของโปรเจกต์
-
-| Package         | ประเภท    | ใช้เมื่อ                                                                  |
-| --------------- | --------- | ------------------------------------------------------------------------- |
-| `@brt/antd`     | Component | โปรเจกต์ใช้ Ant Design v6                                                 |
-| `@brt/shadcn`   | Component | โปรเจกต์ใช้ shadcn/ui (รวม `@brt/tailwind` มาให้แล้ว)                     |
-| `@brt/tailwind` | Style     | โปรเจกต์ใช้ Tailwind CSS v4                                               |
-| `@brt/css`      | Style     | โปรเจกต์ใช้ CSS framework อื่น (styled-components, Sass, CSS Modules ...) |
-
-| โปรเจกต์                 | ติดตั้ง                                 |
-| ------------------------ | --------------------------------------- |
-| antd + Tailwind          | `pnpm add @brt/antd @brt/tailwind antd` |
-| antd + styled-components | `pnpm add @brt/antd @brt/css antd`      |
-| shadcn                   | `pnpm add @brt/shadcn`                  |
-
-`@brt/design` (token) เป็น package ภายใน ไม่ได้ publish — ใช้ผ่าน adapter เท่านั้น
+```bash
+pnpm add @brt-innovation/antd antd                       # antd
+pnpm add @brt-innovation/design                          # shadcn: token (component port เอง — .ai/shadcn-mapping.md)
+```
 
 ## การใช้งาน
 
-**antd** — ตั้ง brand ที่ provider
+**1. map brand ของโปรเจกต์** (ข้ามได้ถ้าใช้ค่าเริ่มต้น — Brand/BRT ของ Figma)
+
+```ts
+import { defineBrand } from '@brt-innovation/design';
+
+export const brand = defineBrand({
+  name: 'brt',
+  color: { primary: 'brtTeal', secondary: 'twilightStorm', tertiary: 'purple' },
+  font: { sans: 'kanit' },
+});
+```
+
+**2. shadcn** — Tailwind ตั้งที่โปรเจกต์ ส่วน component ที่ port จาก shadcn/ui แปลง class เป็น `var(--brt-*)` ตาม `.ai/shadcn-mapping.md`
+
+```css
+@import 'tailwindcss';
+@import '@brt-innovation/design/tokens.css';
+```
 
 ```tsx
-import { BrtConfigProvider, Button } from '@brt/antd';
+// layout — override สี / ฟอนต์ของ brand
+<html data-brand={brand.name}>
+  <head>
+    <style dangerouslySetInnerHTML={{ __html: generateBrandCss(brand) }} />
+  </head>
+  …
+// src/components/ui/button.tsx — port จาก shadcn/ui เป็นของโปรเจกต์
+<Button variant="primary" intent="brand">บันทึก</Button>
+```
 
-<BrtConfigProvider brand="brt">
+**antd**
+
+```tsx
+import { BrtConfigProvider, Button } from '@brt-innovation/antd';
+
+<BrtConfigProvider brand={brand}>
   <Button type="primary">บันทึก</Button>
 </BrtConfigProvider>;
 ```
 
-**shadcn / Tailwind v4**
+**CSS อื่น / CSS-in-JS** — `var(--brt-color-bg-secondary)` หรือ `vars.color.bg.secondary`
 
-```css
-@import 'tailwindcss';
-@import '@brt/shadcn/styles.css'; /* หรือ '@brt/tailwind/theme.css' ถ้าไม่ใช้ component */
-```
-
-```tsx
-import { Button } from '@brt/shadcn';
-
-<Button variant="primary" intent="brand">
-  บันทึก
-</Button>;
-```
-
-**CSS framework อื่น**
-
-```tsx
-import '@brt/css/tokens.css';
-import { vars } from '@brt/css';
-
-const Card = styled.div`
-  background: ${vars.color.bg.secondary};
-`;
-```
-
-**brand / mode** — โปรเจกต์ที่ไม่มี provider ตั้งที่ `<html data-brand="brt" data-mode="light">` ไม่ตั้ง = `brt` + `light`
+รายละเอียด (ตั้ง `@theme` ของ Tailwind, หลาย brand, antd + Tailwind) อยู่ใน [`.ai/project-setup.md`](.ai/project-setup.md)
 
 ## Development
 
@@ -70,13 +68,16 @@ const Card = styled.div`
 ```bash
 pnpm install
 pnpm build        # turbo build ทุก package
-pnpm storybook    # Storybook ทุก package → http://localhost:6006
-pnpm test         # รวม token coverage test ของทุก adapter
+pnpm storybook    # Storybook (design + antd) → http://localhost:6006
+pnpm test         # token coverage ทุก brand × mode × viewport
 pnpm changeset    # บันทึกการเปลี่ยนแปลงก่อนเปิด PR
+pnpm lint         # ESLint
 pnpm format       # prettier
 ```
 
-Workflow: แตก branch จาก `develop` → PR เข้า `develop` → merge `develop` เข้า `main` เพื่อ release (ดู [`.ai/release.md`](.ai/release.md))
+คำสั่งเดียวกันเรียกผ่าน `make` ได้ (`make help` ดูทั้งหมด — `make check` = ตรวจครบก่อนส่งงาน)
+
+Workflow: แตก branch จาก `develop` → PR เข้า `develop` → merge `develop` เข้า `main` → publish ด้วยมือตาม [`README.dev.md`](README.dev.md) (Publishing Guide)
 
 ## สำหรับ AI Agents
 

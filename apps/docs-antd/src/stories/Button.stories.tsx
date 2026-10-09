@@ -1,4 +1,4 @@
-import { Button } from '@brt/antd';
+import { Button } from '@brt-innovation/antd';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

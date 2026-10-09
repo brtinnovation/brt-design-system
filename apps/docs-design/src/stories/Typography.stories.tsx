@@ -1,4 +1,5 @@
-import { brands, cssVarName, primitive, resolve, viewports, type BrandName } from '@brt/design';
+import { cssVarName, primitive, resolve, viewports } from '@brt-innovation/design';
+import { brands } from '../../.storybook/globals';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Section, Table, mono } from '../ui';
 
@@ -6,8 +7,8 @@ const meta: Meta = { title: 'Tokens/Typography' };
 export default meta;
 
 const sample = 'ระบบออกแบบ BRT — The quick brown fox 0123456789';
-const t = resolve('brt', 'light');
-const byViewport = Object.fromEntries(viewports.map((v) => [v, resolve('brt', 'light', v)]));
+const t = resolve();
+const byViewport = Object.fromEntries(viewports.map((v) => [v, resolve(undefined, 'light', v)]));
 
 export const FontFamily: StoryObj = {
   render: () => (
@@ -25,9 +26,9 @@ export const FontFamily: StoryObj = {
       <Section title="Brand">
         <Table
           head={['brand', 'sans']}
-          rows={(Object.keys(brands) as BrandName[]).map((b) => [
+          rows={Object.keys(brands).map((b) => [
             b,
-            <code style={mono}>{brands[b].font.sans}</code>,
+            <code style={mono}>{brands[b]!.font.sans}</code>,
           ])}
         />
       </Section>

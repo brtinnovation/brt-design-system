@@ -1,20 +1,41 @@
 {
-  "name": "@brt/design",
+  "name": "@brt-innovation/design",
   "version": "0.0.0",
-  "private": true,
-  "description": "BRT design tokens (internal) — ใช้ผ่าน adapter เท่านั้น ไม่ publish",
+  "description": "BRT design tokens จาก Figma — primitive, semantic, defineBrand และ CSS variables (ไม่ผูกกับ framework)",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brtinnovation/brt-design-system.git",
+    "directory": "packages/design"
+  },
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./tokens.css": "./dist/tokens.css"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "scripts": {
     "build": "tsup && tsx scripts/build.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
-  },
-  "types": "./dist/index.d.ts"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run build && pnpm run test"
+  }
 }

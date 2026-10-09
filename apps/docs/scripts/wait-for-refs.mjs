@@ -1,7 +1,7 @@
 // host ต้องเริ่มหลัง Storybook ของ package พร้อมแล้ว:
 // ตอนเริ่ม host จะเช็ก ref แต่ละตัว — ถ้ายังไม่ตอบจะถูกโหลดแบบ credentials แล้วติด CORS ("Something went wrong loading this Storybook")
 // port ต้องตรงกับ refs ใน .storybook/main.ts
-const refs = ['http://localhost:6007', 'http://localhost:6008', 'http://localhost:6009'];
+const refs = ['http://localhost:6007', 'http://localhost:6008'];
 const timeoutMs = 180_000;
 const start = Date.now();
 

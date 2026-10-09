@@ -1,11 +1,11 @@
-import type { SemanticPath } from '@brt/design';
+import type { SemanticPath } from '@brt-innovation/design';
 import type { ThemeConfig } from 'antd';
 
 type AntdToken = keyof NonNullable<ThemeConfig['token']>;
 
 /**
  * semantic token → global token ของ antd
- * เป็น Record ของ SemanticPath ทุกตัว: เพิ่ม token ใน @brt/design แล้วไม่ map ที่นี่ = typecheck ไม่ผ่าน
+ * เป็น Record ของ SemanticPath ทุกตัว: เพิ่ม token ใน @brt-innovation/design แล้วไม่ map ที่นี่ = typecheck ไม่ผ่าน
  * `null` = antd ไม่มี token ที่ตรงกัน (ใช้ใน component ของ BRT เอง หรือ map ระดับ component แทน)
  * antd token ละหนึ่ง semantic token เท่านั้น — test ตรวจว่าไม่ซ้ำ
  */
@@ -180,13 +180,20 @@ export const antdTokenMap = {
   'shadow.sm': 'boxShadowTertiary',
   'shadow.md': 'boxShadowSecondary',
   'shadow.lg': 'boxShadow',
+  // antd มี global shadow แค่ 3 ระดับ — ขั้นที่ใหญ่กว่าใช้ใน component ของ BRT / CSS ของโปรเจกต์
+  'shadow.xl': null,
+  'shadow.2xl': null,
+  'shadow.3xl': null,
   'breakpoint.sm': 'screenSM',
   'breakpoint.md': 'screenMD',
   'breakpoint.lg': 'screenLG',
   'breakpoint.xl': 'screenXL',
-  'zIndex.base': 'zIndexBase',
-  'zIndex.dropdown': 'zIndexPopupBase',
-  'zIndex.sticky': null,
-  'zIndex.modal': null,
-  'zIndex.toast': null,
+  'breakpoint.2xl': 'screenXXL',
+  'zIndex.0': 'zIndexBase',
+  // scale ของ Tailwind (10–50) ต่ำกว่า popup ของ antd (zIndexPopupBase 1000) — ปล่อยให้ antd จัดชั้น popup เอง
+  'zIndex.10': null,
+  'zIndex.20': null,
+  'zIndex.30': null,
+  'zIndex.40': null,
+  'zIndex.50': null,
 } as const satisfies Record<SemanticPath, AntdToken | null>;

@@ -1,10 +1,9 @@
 export * as primitive from './primitive';
 export {
-  brands,
   defaultBrand,
   defineBrand,
   type Brand,
-  type BrandName,
+  type BrandDefinition,
   type NeutralPaletteName,
 } from './brands';
 export {
@@ -19,4 +18,13 @@ export {
   type SemanticTokens,
   type Viewport,
 } from './semantic';
-export { createVars, cssValue, cssVarName, generateTokensCss, type BrtVars } from './css';
+export {
+  createVars,
+  cssValue,
+  cssVarName,
+  generateBrandCss,
+  generateTokensCss,
+  vars,
+  type BrandCssOptions,
+  type BrtVars,
+} from './css';

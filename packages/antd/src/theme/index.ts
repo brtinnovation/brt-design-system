@@ -2,11 +2,11 @@ import {
   defaultBrand,
   flatten,
   resolve,
-  type BrandName,
+  type Brand,
   type Mode,
   type SemanticPath,
   type Viewport,
-} from '@brt/design';
+} from '@brt-innovation/design';
 import { theme, type ThemeConfig } from 'antd';
 import { antdTokenMap } from './mapping';
 
@@ -16,7 +16,7 @@ import { antdTokenMap } from './mapping';
  * antd ส่วนใหญ่ใช้ในหน้าจอ desktop จึงใช้ค่า desktop ของ typography / radius เป็นค่าเริ่มต้น
  */
 export function getThemeConfig(
-  brand: BrandName = defaultBrand,
+  brand: Brand = defaultBrand,
   mode: Mode = 'light',
   viewport: Viewport = 'desktop',
 ): ThemeConfig {

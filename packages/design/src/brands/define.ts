@@ -9,6 +9,7 @@ export type NeutralPaletteName = {
  * brand = การเลือกจาก primitive เท่านั้น — ห้ามใส่ hex หรือชื่อฟอนต์ดิบ
  * type บังคับให้เลือกได้เฉพาะ palette / ฟอนต์ที่มีใน primitive
  * ตรงกับ collection `02-alias` ของ Figma (Brand/<name>, System, Global/Neutral)
+ * โปรเจกต์ที่เรียกใช้เป็นคนประกาศ brand ของตัวเอง — `name` ใช้เป็น `data-brand` ใน CSS
  */
 export interface BrandDefinition {
   name: string;

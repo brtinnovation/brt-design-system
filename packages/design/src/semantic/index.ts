@@ -1,4 +1,4 @@
-import { brands, type BrandName } from '../brands';
+import { defaultBrand, type Brand } from '../brands';
 import {
   alpha,
   breakpoint,
@@ -31,9 +31,8 @@ export type Viewport = (typeof viewports)[number];
  * ตัดออกจาก Figma: Foreground / Icon (ค่าซ้ำ Text), Quaternary–Senary, *_darker, Transparent_*,
  * ระดับ Light / Lighter / Dark / Darker ของ brand และสถานะ, Component/Utility, Gradient, Input, Breadcrumb
  */
-function resolveColor(brandName: BrandName, _mode: Mode) {
+function resolveColor(brand: Brand, _mode: Mode) {
   // ยังไม่มีค่า dark จาก Figma — ทุก mode ใช้กฎของ light ไปก่อน
-  const brand = brands[brandName];
   const scale = (name: keyof typeof palette) => palette[name] as ColorScale;
   const primary = scale(brand.color.primary);
   const secondary = scale(brand.color.secondary);
@@ -176,10 +175,14 @@ function resolveColor(brandName: BrandName, _mode: Mode) {
   };
 }
 
-export function resolve(brandName: BrandName, mode: Mode, viewport: Viewport = 'mobile') {
-  const brand = brands[brandName];
+/** semantic token ค่าดิบของ brand — ไม่ส่ง brand = `defaultBrand` */
+export function resolve(
+  brand: Brand = defaultBrand,
+  mode: Mode = 'light',
+  viewport: Viewport = 'mobile',
+) {
   return {
-    color: resolveColor(brandName, mode),
+    color: resolveColor(brand, mode),
     font: { sans: fontFamily[brand.font.sans] },
     fontSize: fontSize[viewport],
     fontWeight,
@@ -199,8 +202,7 @@ export type SemanticTokens = ReturnType<typeof resolve>;
 export const desktopBreakpoint = 'md' satisfies keyof typeof breakpoint;
 
 /** palette ทั้งชุดของ brand — สำหรับ framework ที่ต้องการ scale (เช่น Mantine) เท่านั้น */
-export function resolvePalette(brandName: BrandName) {
-  const brand = brands[brandName];
+export function resolvePalette(brand: Brand = defaultBrand) {
   return {
     primary: palette[brand.color.primary] as ColorScale,
     secondary: palette[brand.color.secondary] as ColorScale,

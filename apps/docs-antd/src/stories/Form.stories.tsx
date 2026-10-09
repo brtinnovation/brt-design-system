@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Select } from '@brt/antd';
+import { Button, DatePicker, Form, Input, Select } from '@brt-innovation/antd';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = { title: 'Components/Form' };

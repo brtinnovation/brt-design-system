@@ -1,4 +1,4 @@
-import { StatusTag, Table, type Status } from '@brt/antd';
+import { StatusTag, Table, type Status } from '@brt-innovation/antd';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = { title: 'Components/Table' };

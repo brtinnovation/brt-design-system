@@ -1,58 +1,47 @@
-import { cssVarName, flatten, resolve } from '@brt/design';
-import themeCss from '@brt/tailwind/theme.css?raw';
+import { cssVarName, flatten, resolve } from '@brt-innovation/design';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Section, Table, mono } from '../ui';
 
-const meta: Meta = { title: 'Tokens/Tailwind & CSS' };
+const meta: Meta = { title: 'Tokens/Usage' };
 export default meta;
 
-// อ่านจาก theme.css ที่ @brt/tailwind build จริง — ตารางนี้จึงตรงกับ package เสมอ
-const toTailwindVar = new Map<string, string>();
-for (const [, tw, brt] of themeCss.matchAll(/(--[\w-]+):\s*var\((--brt-[\w-]+)\)/g))
-  toTailwindVar.set(brt!, tw!);
-for (const [, name, brt] of themeCss.matchAll(
-  /@utility (z-[\w-]+) \{\s*z-index: var\((--brt-[\w-]+)\)/g,
-))
-  toTailwindVar.set(brt!, `@utility ${name}`);
-
-const namespaces: [string, (k: string) => string][] = [
-  ['--text-color-', (k) => `text-${k}`],
-  ['--background-color-', (k) => `bg-${k}`],
-  ['--border-color-', (k) => `border-${k}`],
-  ['--color-', (k) => `ring-${k}`],
-  ['--text-', (k) => `text-${k}`],
-  ['--font-weight-', (k) => `font-${k}`],
-  ['--font-', (k) => `font-${k}`],
-  ['--leading-', (k) => `leading-${k}`],
-  ['--tracking-', (k) => `tracking-${k}`],
-  ['--radius-', (k) => `rounded-${k}`],
-  ['--shadow-', (k) => `shadow-${k}`],
-  ['--spacing-', (k) => `p-${k} m-${k} gap-${k}`],
-];
-
-function tailwindUtility(path: string): string {
-  if (path.startsWith('breakpoint.')) return `${path.split('.')[1]}:`;
-  const tw = toTailwindVar.get(cssVarName(path));
-  if (!tw) return '—';
-  if (tw.startsWith('@utility ')) return tw.replace('@utility ', '');
-  for (const [prefix, fmt] of namespaces)
-    if (tw.startsWith(prefix)) return fmt(tw.slice(prefix.length));
-  return tw;
+// Tailwind แบบไม่ตั้ง @theme — อ้าง CSS variable ตรง ๆ (แบบที่ตารางแปลง shadcn แนะนำ)
+function tailwindClass(path: string): string {
+  const v = cssVarName(path);
+  if (path.startsWith('color.text.')) return `text-(${v})`;
+  if (path.startsWith('color.bg.')) return `bg-(${v})`;
+  if (path.startsWith('color.border.')) return `border-(${v})`;
+  if (path.startsWith('color.button.'))
+    return path.includes('.bg')
+      ? `bg-(${v})`
+      : path.includes('.text')
+        ? `text-(${v})`
+        : `border-(${v})`;
+  if (path.startsWith('fontSize.')) return `text-(length:${v})`;
+  if (path.startsWith('fontWeight.')) return `font-(${v})`;
+  if (path.startsWith('font.')) return `font-(family-name:${v})`;
+  if (path.startsWith('lineHeight.')) return `leading-(${v})`;
+  if (path.startsWith('letterSpacing.')) return `tracking-(${v})`;
+  if (path.startsWith('spacing.')) return `p-(${v}) gap-(${v})`;
+  if (path.startsWith('radius.')) return `rounded-(${v})`;
+  if (path.startsWith('shadow.')) return `shadow-(${v})`;
+  if (path.startsWith('zIndex.')) return `z-(${v})`;
+  return '— (ใช้ใน @media ไม่ได้)';
 }
 
 export const Reference: StoryObj = {
   render: () => (
     <Section
-      title="ใช้ token กับ CSS framework"
-      note="@brt/tailwind → utility class · @brt/css → CSS variable / vars (TS) — ทั้งสองอ้างค่าเดียวกันและเปลี่ยนตาม brand / mode"
+      title="ใช้ token ในโปรเจกต์"
+      note="ทุก token เป็น CSS variable --brt-* (จาก tokens.css ที่มากับ adapter) · การตั้ง utility ของ Tailwind / CSS framework เป็นของโปรเจกต์ — คอลัมน์ Tailwind คือแบบไม่ตั้ง @theme"
     >
       <Table
-        head={['semantic token', '@brt/tailwind', '@brt/css (CSS)', '@brt/css (TS)']}
-        rows={flatten(resolve('brt', 'light')).map(([path]) => [
+        head={['semantic token', 'CSS variable', 'TS (vars)', 'Tailwind (ไม่ตั้ง @theme)']}
+        rows={flatten(resolve()).map(([path]) => [
           <code style={mono}>{path}</code>,
-          <code style={mono}>{tailwindUtility(path)}</code>,
           <code style={mono}>var({cssVarName(path)})</code>,
           <code style={mono}>vars.{path}</code>,
+          <code style={mono}>{tailwindClass(path)}</code>,
         ])}
       />
     </Section>

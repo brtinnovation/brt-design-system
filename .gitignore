@@ -57,3 +57,7 @@ Thumbs.db
 # AI agent local state (ไฟล์ที่ commit ได้คือ AGENTS.md / CLAUDE.md / .ai/)
 .claude/settings.local.json
 .claude/worktrees/
+
+
+# make pack
+.pack/

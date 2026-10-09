@@ -1,4 +1,5 @@
-import { brands, flatten, modes, primitive, resolve, type BrandName } from '@brt/design';
+import { flatten, modes, primitive, resolve } from '@brt-innovation/design';
+import { brands } from '../../.storybook/globals';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Section, Swatch, Table, mono } from '../ui';
 
@@ -10,7 +11,7 @@ export const Palette: StoryObj = {
   render: () => (
     <Section
       title="Palette"
-      note="primitive จาก Figma — -90 เข้มสุด · 00 สีหลัก · +90 อ่อนสุด · ใช้ภายใน @brt/design เท่านั้น brand เลือก palette จากชุดนี้"
+      note="primitive จาก Figma — -90 เข้มสุด · 00 สีหลัก · +90 อ่อนสุด · ใช้ภายใน @brt-innovation/design เท่านั้น brand เลือก palette จากชุดนี้"
     >
       <div style={{ display: 'grid', gap: 20 }}>
         {Object.entries(primitive.palette).map(([name, scale]) => (
@@ -19,7 +20,7 @@ export const Palette: StoryObj = {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
                 gap: 8,
               }}
             >
@@ -34,7 +35,7 @@ export const Palette: StoryObj = {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(72px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
               gap: 8,
             }}
           >
@@ -50,27 +51,25 @@ export const Palette: StoryObj = {
   ),
 };
 
-const colorPaths = flatten(resolve('brt', 'light'))
+const colorPaths = flatten(resolve())
   .map(([path]) => path)
   .filter((p) => p.startsWith('color.'));
 
 /** semantic — ค่าจริงของทุก brand × mode */
 export const Semantic: StoryObj = {
   render: () => {
-    const cols = (Object.keys(brands) as BrandName[]).flatMap((b) =>
-      modes.map((m) => [b, m] as const),
-    );
+    const cols = Object.keys(brands).flatMap((b) => modes.map((m) => [b, m] as const));
     return (
       <Section
         title="Semantic colors"
-        note="ค่าที่ adapter ใช้จริง — brand เลือก palette ส่วนขั้น (-40, +90 …) มาจากกฎกลางใน semantic/"
+        note="ค่าดิบจาก resolve(brand) — brand เลือก palette ส่วนขั้น (-40, +90 …) มาจากกฎกลางใน semantic/ · example คือ brand ตัวอย่างที่ประกาศด้วย defineBrand()"
       >
         <Table
           head={['token', ...cols.map(([b, m]) => `${b} / ${m}`)]}
           rows={colorPaths.map((path) => [
             <code style={mono}>{path}</code>,
             ...cols.map(([b, m]) => {
-              const value = flatten(resolve(b, m)).find(([p]) => p === path)?.[1] as string;
+              const value = flatten(resolve(brands[b], m)).find(([p]) => p === path)?.[1] as string;
               return <Swatch color={value} label="" sub={value} />;
             }),
           ])}

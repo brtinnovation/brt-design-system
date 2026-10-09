@@ -1,23 +1,21 @@
-import type { BrandName, Mode } from '@brt/design';
+import { defaultBrand, type Brand, type Mode } from '@brt-innovation/design';
 import { ConfigProvider, type ConfigProviderProps } from 'antd';
 import thTH from 'antd/locale/th_TH';
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { getThemeConfig } from '../theme';
 
 export interface BrtConfigProviderProps extends Omit<ConfigProviderProps, 'theme'> {
-  brand?: BrandName;
+  /** brand ที่โปรเจกต์ประกาศด้วย `defineBrand()` — ไม่ส่ง = `defaultBrand` */
+  brand?: Brand;
   mode?: Mode;
   /** merge ทับ ThemeConfig ของ brand — ใช้เท่าที่จำเป็น */
   theme?: ConfigProviderProps['theme'];
   children: ReactNode;
 }
 
-/**
- * ตั้ง brand ที่เดียว: antd ได้ theme ผ่าน context
- * และ <html data-brand data-mode> ทำให้ style adapter (@brt/tailwind, @brt/css) เปลี่ยนตาม
- */
+/** ตั้ง brand ที่เดียว: component ของ antd ได้ theme ผ่าน context */
 export function BrtConfigProvider({
-  brand = 'brt',
+  brand = defaultBrand,
   mode = 'light',
   locale = thTH,
   theme,
@@ -28,12 +26,6 @@ export function BrtConfigProvider({
     const base = getThemeConfig(brand, mode);
     return theme ? { ...base, ...theme, token: { ...base.token, ...theme.token } } : base;
   }, [brand, mode, theme]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.dataset.brand = brand;
-    root.dataset.mode = mode;
-  }, [brand, mode]);
 
   return (
     <ConfigProvider {...rest} locale={locale} theme={themeConfig}>

@@ -1,4 +1,4 @@
-import { StatusTag } from '@brt/antd';
+import { StatusTag } from '@brt-innovation/antd';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

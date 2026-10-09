@@ -1,5 +1,5 @@
 {
-  "name": "@brt/docs-antd",
+  "name": "@brt-innovation/docs-antd",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@brt/antd": "workspace:*",
+    "@brt-innovation/antd": "workspace:*",
     "@storybook/addon-docs": "^10.6.1",
     "antd": "^6.6.5",
     "storybook": "^10.6.1",

@@ -1,14 +1,21 @@
-# @brt/antd
+# @brt-innovation/antd
 
 BRT design tokens + components สำหรับ Ant Design v6
 
 ```tsx
-import { BrtConfigProvider, Button, StatusTag } from '@brt/antd';
+import { BrtConfigProvider, Button, StatusTag } from '@brt-innovation/antd';
+import { defineBrand } from '@brt-innovation/antd/tokens';
 
-<BrtConfigProvider brand="brt" mode="light">
+const brand = defineBrand({
+  name: 'brt',
+  color: { primary: 'brtTeal', secondary: 'twilightStorm', tertiary: 'purple' },
+  font: { sans: 'kanit' },
+});
+
+<BrtConfigProvider brand={brand}>
   <Button type="primary">บันทึก</Button>
   <StatusTag status="success">อนุมัติ</StatusTag>
 </BrtConfigProvider>;
 ```
 
-`BrtConfigProvider` ใส่ theme ของ brand, locale ไทย และตั้ง `data-brand` / `data-mode` ที่ `<html>` ให้ style adapter (`@brt/tailwind`, `@brt/css`) เปลี่ยนตาม
+ไม่ส่ง `brand` = ค่าเริ่มต้นจาก Figma · `BrtConfigProvider` ใส่ locale ไทยให้ด้วย · token ทั้งหมดอยู่ที่ `@brt-innovation/antd/tokens`

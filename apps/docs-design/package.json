@@ -1,5 +1,5 @@
 {
-  "name": "@brt/docs-design",
+  "name": "@brt-innovation/docs-design",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,8 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@brt/design": "workspace:*",
-    "@brt/tailwind": "workspace:*",
+    "@brt-innovation/design": "workspace:*",
     "storybook": "^10.6.1",
     "@storybook/react-vite": "^10.6.1",
     "@types/react": "^19.3.0",
