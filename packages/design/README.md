@@ -12,7 +12,7 @@ BRT design tokens จาก Figma — สี, ตัวอักษร, spacing,
 pnpm add @brt-innovation/design
 ```
 
-ต้องการ Node.js 20 ขึ้นไป · ใช้ได้ทั้ง ESM (`import`) และ CommonJS (`require`) · มี type ของ TypeScript ในตัว
+ต้องการ Node.js 24 ขึ้นไป · ใช้ได้ทั้ง ESM (`import`) และ CommonJS (`require`) · มี type ของ TypeScript ในตัว
 
 ## เริ่มต้นใช้งาน
 
