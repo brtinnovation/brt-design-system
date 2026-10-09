@@ -19,3 +19,7 @@ const brand = defineBrand({
 ```
 
 ไม่ส่ง `brand` = ค่าเริ่มต้นจาก Figma · `BrtConfigProvider` ใส่ locale ไทยให้ด้วย · token ทั้งหมดอยู่ที่ `@brt-innovation/antd/tokens`
+
+## License
+
+UNLICENSED - Internal use only for BRT Innovation
